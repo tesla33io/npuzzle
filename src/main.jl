@@ -1,6 +1,8 @@
 module NPuzzle
 using Random
-import Dates
+using Dates
+
+include("display.jl")
 
 # Creates a grid representing a random state
 # 0x00 represents the empty tile
@@ -12,12 +14,8 @@ function create_grid(N::UInt8)::Vector{UInt8}
 end # create_grid
 
 function main()
-    for i = 1:10
-        grid::Vector{UInt8} = create_grid(UInt8(16))
-        println(length(grid))
-        println(grid)
-        sleep(1)
-    end # for
+    grid::Vector{UInt8} = create_grid(UInt8(16))
+    print_grid(Int(4), grid)
 end # main
 
 end # module
