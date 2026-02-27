@@ -1,7 +1,7 @@
 JULIA = julia
 PROJECT = .
 ENTRY = src/main.jl
-TEST_ENTRY = tests/test_snail_solution.jl
+TEST_ENTRY = tests/tests.jl
 
 all: deps
 

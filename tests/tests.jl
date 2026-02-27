@@ -82,3 +82,70 @@ end # Edge
     result = create_final_solution(N)
     @test result == expected
 end
+
+@testset "Step function 2 invalid, 2 valid steps" begin
+    N::Int = 4
+    grid::Vector{Int} = [
+                         1,  2,  3,  4,
+                         5,  6,  7,  8,
+                         9,  10, 11, 12,
+                         13, 14, 15, 0
+                        ]
+    expected::Vector{Int} = [
+                             1,  2,  3,  4,
+                             5,  6,  7,  8,
+                             9,  10, 11, 0,
+                             13, 14, 15, 12
+                            ]
+    ret = NPuzzle.step(2, N, grid)
+    @test ret == [0]
+    ret = NPuzzle.step(3, N, grid)
+    @test ret == [0]
+    ret = NPuzzle.step(1, N, grid)
+    @test ret == expected
+
+
+    expected = [
+                1,  2,  3,  4,
+                5,  6,  7,  8,
+                9,  10, 11, 12,
+                13, 14, 0, 15
+               ]
+    ret = NPuzzle.step(4, N, grid)
+    @test ret == expected
+end
+
+
+@testset "Step function 4 valid steps" begin
+    N::Int = 3
+    grid::Vector{Int} = [
+                         1, 2, 3,
+                         8, 0, 4,
+                         7, 6, 5
+                        ]
+    expected_up::Vector{Int} = [
+                                1, 0, 3,
+                                8, 2, 4,
+                                7, 6, 5
+                               ]
+    expected_down::Vector{Int} = [
+                                  1, 2, 3,
+                                  8, 6, 4,
+                                  7, 0, 5
+                                 ]
+    expected_left::Vector{Int} = [
+                                  1, 2, 3,
+                                  0, 8, 4,
+                                  7, 6, 5
+                                 ]
+    expected_right::Vector{Int} = [
+                                   1, 2, 3,
+                                   8, 4, 0,
+                                   7, 6, 5
+                                  ]
+
+    @test NPuzzle.step(1, N, grid) == expected_up
+    @test NPuzzle.step(2, N, grid) == expected_right
+    @test NPuzzle.step(3, N, grid) == expected_down
+    @test NPuzzle.step(4, N, grid) == expected_left
+end

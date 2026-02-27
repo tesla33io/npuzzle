@@ -2,7 +2,7 @@ module NPuzzle
 using Random
 using Dates
 
-export create_final_solution
+export create_final_solution, step
 
 include("display.jl")
 
@@ -59,12 +59,52 @@ function create_final_solution(N::Int)::Vector{Int}
     return solution
 end # create_final_solution
 
-const N::Int = 13
+
+# Direction
+#     1
+#   4 0 2
+#     3
+# 0 -> epmty tile
+# 1-4 -> next position of the empty tile
+function step(d::Int, N::Int, grid::Vector{Int})::Vector{Int}
+    current_idx::Int = findfirst(==(0), grid)
+    if (current_idx <= N && d == 1) ||
+        (current_idx > (N*N - N) && d == 3) ||
+        (current_idx % N == 0 && d == 2 ) ||
+        ((current_idx - 1) % N == 0 && d == 4)
+        # Check for out of bound steps
+        return [0]
+    end # if
+    ret = copy(grid)
+    zero_idx = findfirst(==(0), ret)
+
+    @assert zero_idx !== nothing "No zero tile found"
+    z = zero_idx
+
+    if d == 1
+        n = z - N
+    elseif d == 3
+        n = z + N
+    elseif d == 4
+        n = z - 1
+    elseif d == 2
+        n = z + 1
+    else
+        error("invalid d=$d")
+    end # if
+
+    ret[z], ret[n] = ret[n], ret[z]
+    return ret
+end # step
+
 
 function main()
     #grid::Vector{Int} = create_grid(Int(16))
-    grid::Vector{Int} = create_final_solution(N)
-    print_grid(N, grid)
+    for N = 2:9
+        grid::Vector{Int} = create_final_solution(N)
+        print_grid(N, grid)
+        println()
+    end # for
 end # main
 
 end # module
